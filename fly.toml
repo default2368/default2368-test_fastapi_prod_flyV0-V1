@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for az-mcp-server on 2025-10-13T07:32:02Z
+# fly.toml app configuration file generated for default2368-test-fastapi-prod-flyv0-v1 on 2025-10-20T17:44:23Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'az-mcp-server'
+app = 'default2368-test-fastapi-prod-flyv0-v1'
 primary_region = 'fra'
 
 [build]
