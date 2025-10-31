@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for default2368-test-fastapi-prod-flyv0-v1 on 2025-10-20T17:44:23Z
+# fly.toml app configuration file generated for fly-fastapi-composio-agent on 2025-10-31T07:54:48Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'default2368-test-fastapi-prod-flyv0-v1'
+app = 'fly-fastapi-composio-agent'
 primary_region = 'fra'
 
 [build]
