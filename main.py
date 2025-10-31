@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
-from routes.agent import router as agent_router
+# from routes.agent import router as agent_router
+from routes.tests_routes import router as agent_router
 
 app = FastAPI(
     title="Test Decorator API",
