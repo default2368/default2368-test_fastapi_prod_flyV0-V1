@@ -1,13 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
+import os
+from dotenv import load_dotenv
 
-# from routes.agent import router as agent_router
-from routes.tests_routes import router as agent_router
+# Carica le variabili d'ambiente
+load_dotenv()
+
+from routes.tests_routes import router as test_router
+from routes.agent import router as agent_router
 
 app = FastAPI(
     title="Test Decorator API",
-    description="API di test per il decoratore logga_chiamata",
+    description="API di test per il decoratore logga_chiamata e DeepSeek Integration",
     version="1.0.0"
 )
 
@@ -20,7 +25,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Includi il router
+# Includi i router
+app.include_router(test_router)
 app.include_router(agent_router)
 
 # ===== ENDPOINTS PRINCIPALI =====
@@ -33,9 +39,12 @@ async def root():
 @app.get("/status")
 async def system_status():
     """Restituisce lo stato del sistema"""
-    # Verifica lo spazio su disco
     import shutil
     total, used, free = shutil.disk_usage("/")
+    
+    # Verifica configurazione DeepSeek
+    deepseek_configured = os.getenv("DEEPSEEK_API_KEY") is not None
+    composio_configured = os.getenv("COMPOSIO_API_KEY") is not None
     
     return {
         "status": "operational",
@@ -46,11 +55,18 @@ async def system_status():
                 "used_gb": round(used / (2**30), 2),
                 "free_gb": round(free / (2**30), 2),
                 "free_percent": round((free / total) * 100, 2)
+            },
+            "services": {
+                "deepseek_configured": deepseek_configured,
+                "composio_configured": composio_configured
             }
         },
         "endpoints": [
             "/status",
-            "/api/v1/test-decoratore"
+            "/health",
+            "/api/v1/test-decoratore",
+            "/api/v1/chat",
+            "/api/v1/deepseek-status"
         ]
     }
 

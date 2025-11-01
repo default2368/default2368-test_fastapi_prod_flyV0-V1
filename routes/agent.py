@@ -1,38 +1,67 @@
-from fastapi import APIRouter, HTTPException
-from typing import Dict, Any, Callable
-import functools
+from fastapi import APIRouter, HTTPException, Header, Depends
+import json
+import os
+from typing import Optional
 
-# Importa il decoratore e le funzioni di test
-from modules.main.test_functions import logga_chiamata, esegui_test_completo
+from modules.main.deepseek import deepseek_manager
 
 router = APIRouter(prefix="/api/v1", tags=["Agent"])
 
-@router.get("/test-decoratore")
-async def test_decoratore():
+# Middleware per verificare la chiave API
+async def verify_api_key(x_api_key: str = Header(None, alias="X-API-Key")):
+    expected_key = os.getenv("DEEPSEEK_API_KEY")
+    if not expected_key:
+        raise HTTPException(status_code=500, detail="API key non configurata sul server")
+    
+    if not x_api_key or x_api_key != expected_key:
+        raise HTTPException(status_code=401, detail="API key non valida")
+    return x_api_key
+
+@router.post("/chat")
+async def chat_with_tools(
+    prompt: str,
+    use_tools: bool = False,
+    user_id: Optional[str] = "default",
+    api_key: str = Depends(verify_api_key)
+):
     """
-    Test del decoratore logga_chiamata.
-    Esegue le funzioni decorate e restituisce i risultati con log.
+    Endpoint per chat con DeepSeek
     """
     try:
-        # Esegui il test completo che include le funzioni decorate
-        risultati = esegui_test_completo()
-        
-        # Aggiungi un esempio di funzione decorata al volo
-        @logga_chiamata
-        def funzione_temporanea():
-            return "Questa è una funzione temporanea decorata al volo!"
-            
-        # Aggiungi il risultato della funzione temporanea
-        risultati["funzione_temporanea"] = funzione_temporanea()
-        
-        return {
-            "status": "success",
-            "message": "Test del decoratore completato con successo",
-            "risultati": risultati
-        }
-        
+        if not prompt:
+            raise HTTPException(status_code=400, detail="Campo 'prompt' mancante o vuoto")
+
+        # Log per debug
+        print(f"Prompt ricevuto: {prompt}")
+
+        # Scegli tra chat semplice o con tool
+        if use_tools:
+            result = deepseek_manager.chat_with_tools(prompt, user_id)
+        else:
+            result = deepseek_manager.simple_chat(prompt)
+
+        # Gestisci errori
+        if "error" in result:
+            raise HTTPException(status_code=500, detail=result["error"])
+
+        return result
+
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Errore durante l'esecuzione del test del decoratore: {str(e)}"
+            detail=f"Errore interno del server: {str(e)}"
         )
+
+@router.get("/deepseek-status")
+async def deepseek_status():
+    """
+    Verifica lo stato della connessione DeepSeek
+    """
+    result = deepseek_manager.test_connection()
+    
+    if result["status"] == "error":
+        raise HTTPException(status_code=500, detail=result["message"])
+    
+    return result

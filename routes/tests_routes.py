@@ -5,7 +5,7 @@ import functools
 # Importa il decoratore e le funzioni di test
 from modules.main.test_functions import logga_chiamata, esegui_test_completo
 
-router = APIRouter(prefix="/api/v1", tags=["Agent"])
+router = APIRouter(prefix="/api/v1", tags=["Tests"])
 
 @router.get("/test-decoratore")
 async def test_decoratore():
