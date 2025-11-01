@@ -8,7 +8,7 @@ from typing import Dict, Any, Optional
 class DeepSeekManager:
     def __init__(self):
         self.api_key = os.getenv("DEEPSEEK_API_KEY")
-        self.base_url = "https://api.deepseek.com/v1"
+        self.base_url = os.getenv("DEEPSEEK_API_URL")
         self.composio_api_key = os.getenv("COMPOSIO_API_KEY")
         
         # Inizializza client DeepSeek

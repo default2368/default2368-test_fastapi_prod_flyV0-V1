@@ -1,0 +1,164 @@
+{
+  "info": {
+    "name": "DeepSeek MCP Agent API",
+    "description": "Collection completa per testare l'API DeepSeek con MCP Tools",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "sk-tua-chiave-deepseek-qui",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🧠 Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/health",
+          "host": ["{{BASE_URL}}"],
+          "path": ["health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "📊 System Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/status",
+          "host": ["{{BASE_URL}}"],
+          "path": ["status"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "🔍 DeepSeek Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/api/v1/deepseek-status",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "v1", "deepseek-status"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "🛠️ Available Tools",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/api/v1/available-tools",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "v1", "available-tools"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "🤖 Chat Semplice",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"Ciao, spiegami cos'è l'intelligenza artificiale in modo semplice\"\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/v1/chat",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "v1", "chat"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "🔧 Chat con Tool MCP",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"Calcola 25 * 4 + 10 e formatta 'ciao mondo' in maiuscolo\",\n  \"use_tools\": true\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/v1/chat",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "v1", "chat"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "🎯 Chat con Tool Specifici",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"Calcola (15 + 5) * 3 e controlla lo stato di https://google.com\",\n  \"use_tools\": true,\n  \"tools_list\": [\"calculate_operation\", \"check_remote_health\"]\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/v1/chat",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "v1", "chat"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "⚡ Test Decoratore",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/api/v1/test-decoratore",
+          "host": ["{{BASE_URL}}"],
+          "path": ["api", "v1", "test-decoratore"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
